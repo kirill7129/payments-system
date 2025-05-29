@@ -21,3 +21,6 @@ class Payment(models.Model):
         decimal_places=2,
     )
 
+    def __str__(self) -> str:
+        return f'{self.organization}: {self.amount}'
+
