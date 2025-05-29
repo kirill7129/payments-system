@@ -54,7 +54,7 @@ class OrganizationBalanceAPIView(APIView):
         except Organization.DoesNotExist:
             return Response(
                 {'detail': 'Организации с таким ИНН не существует'},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_404_NOT_FOUND,
             )
         
         serializer = OrganizationBalanceSerializer(
