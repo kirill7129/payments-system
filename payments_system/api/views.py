@@ -48,9 +48,9 @@ class PaymentWebhookAPIView(APIView):
             balance_after = organization.balance
 
             BalanceLog.objects.create(
-                organization=organization,
-                balance_before=balance_before,
-                balance_after=balance_after,
+                payment=payment,
+                before=balance_before,
+                after=balance_after,
             )
 
         return Response(
