@@ -23,3 +23,13 @@ class PaymentSerializer(serializers.ModelSerializer):
                 'Организация с таким ИНН не найдена',
             )
         return value
+    
+
+class OrganizationBalanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Organization
+        fields = (
+            'inn',
+            'balance',
+        )
+        read_only_fields = fields

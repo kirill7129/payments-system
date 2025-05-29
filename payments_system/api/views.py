@@ -5,7 +5,10 @@ from django.db import transaction
 from django.db.models import F
 from rest_framework.request import HttpRequest
 
-from api.serializers import PaymentSerializer
+from api.serializers import (
+    PaymentSerializer,
+    OrganizationBalanceSerializer,
+)
 from payments.models import Payment
 from organizations.models import Organization
 
@@ -41,4 +44,23 @@ class PaymentWebhookAPIView(APIView):
         return Response(
             {'detail': 'Платеж успешно обработан'},
             status=status.HTTP_201_CREATED,
+        )
+    
+
+class OrganizationBalanceAPIView(APIView):
+    def get(self, request: HttpRequest, inn: str) -> Response:
+        try:
+            org = Organization.objects.get(inn=inn)
+        except Organization.DoesNotExist:
+            return Response(
+                {'detail': 'Организации с таким ИНН не существует'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+        serializer = OrganizationBalanceSerializer(
+            org
+        )
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK,
         )
