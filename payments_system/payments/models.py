@@ -24,3 +24,5 @@ class Payment(models.Model):
     def __str__(self) -> str:
         return f'{self.organization}: {self.amount}'
 
+    def __repr__(self) -> str:
+        return f'{self.id}'
