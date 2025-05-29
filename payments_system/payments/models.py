@@ -1,3 +1,23 @@
+import uuid
+
 from django.db import models
 
-# Create your models here.
+from organizations.models import Organization
+
+
+class Payment(models.Model):
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.PROTECT,
+        related_name='payments',
+    )
+    id = models.UUIDField(
+        primary_key=True, 
+        default=uuid.uuid4,
+    )
+    amount = models.DecimalField(
+        'Сумма',
+        max_digits=14,
+        decimal_places=2,
+    )
+
