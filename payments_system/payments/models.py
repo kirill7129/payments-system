@@ -38,3 +38,25 @@ class Payment(models.Model):
 
     def __repr__(self) -> str:
         return f'{self.id}'
+    
+
+class BalanceLog(models.Model):
+    id = models.UUIDField(
+        primary_key=True, 
+        default=uuid.uuid4, 
+        editable=False
+    )
+    payment = models.ForeignKey(
+        Payment,
+        on_delete=models.CASCADE,
+        related_name='logs',
+    )
+    before = models.DecimalField(
+        max_digits=PAYMENT_AMOUNT_MAX_DIGITS,
+        decimal_places=PAYMENT_AMOUNT_DECIMAL_PLACES,
+    )
+    after = models.DecimalField(
+        max_digits=PAYMENT_AMOUNT_MAX_DIGITS,
+        decimal_places=PAYMENT_AMOUNT_DECIMAL_PLACES,
+    )
+    timestamp = models.DateTimeField(auto_now_add=True)

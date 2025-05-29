@@ -9,7 +9,7 @@ from api.serializers import (
     PaymentSerializer,
     OrganizationBalanceSerializer,
 )
-from payments.models import Payment
+from payments.models import BalanceLog, Payment
 from organizations.models import Organization
 
 
@@ -38,8 +38,20 @@ class PaymentWebhookAPIView(APIView):
                 organization=organization
             )
 
+            organization.refresh_from_db()
+            balance_before = organization.balance
+
             organization.balance = F('balance') + payment.amount
             organization.save()
+
+            organization.refresh_from_db()
+            balance_after = organization.balance
+
+            BalanceLog.objects.create(
+                organization=organization,
+                balance_before=balance_before,
+                balance_after=balance_after,
+            )
 
         return Response(
             {'detail': 'Платеж успешно обработан'},
@@ -50,7 +62,7 @@ class PaymentWebhookAPIView(APIView):
 class OrganizationBalanceAPIView(APIView):
     def get(self, request: HttpRequest, inn: str) -> Response:
         try:
-            org = Organization.objects.get(inn=inn)
+            organization = Organization.objects.get(inn=inn)
         except Organization.DoesNotExist:
             return Response(
                 {'detail': 'Организации с таким ИНН не существует'},
@@ -58,7 +70,7 @@ class OrganizationBalanceAPIView(APIView):
             )
         
         serializer = OrganizationBalanceSerializer(
-            org
+            organization
         )
         return Response(
             serializer.data,
