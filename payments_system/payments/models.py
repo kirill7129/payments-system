@@ -23,7 +23,7 @@ class Payment(models.Model):
         default=uuid.uuid4,
         editable=False,
     )
-    operation_id = models.UUIDField('ID операции')
+    operation_id = models.UUIDField('ID операции', unique=True)
     amount = models.DecimalField(
         'Сумма',
         max_digits=PAYMENT_AMOUNT_MAX_DIGITS,
