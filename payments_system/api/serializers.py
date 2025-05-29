@@ -1,14 +1,7 @@
 from rest_framework import serializers
 
-from payments.models import (
-    PAYMENT_AMOUNT_DECIMAL_PLACES,
-    PAYMENT_AMOUNT_MAX_DIGITS,
-    Payment,
-)
-from organizations.models import (
-    ORGANIZATION_INN_MAX_LENGTH,
-    Organization,
-)
+from payments.models import Payment
+from organizations.models import Organization
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -22,10 +15,11 @@ class PaymentSerializer(serializers.ModelSerializer):
             'document_number',
             'document_date',
         )
+        read_only_fields = ('organization',)
 
-    def validate_payer_inn(self, value):
+    def validate_payer_inn(self, value: str):
         if not Organization.objects.filter(inn=value).exists():
             raise serializers.ValidationError(
-                'Организации с таким ИНН не найдена',
+                'Организация с таким ИНН не найдена',
             )
         return value

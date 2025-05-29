@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
 from django.db.models import F
+from rest_framework.request import HttpRequest
 
 from api.serializers import PaymentSerializer
 from payments.models import Payment
@@ -10,7 +11,7 @@ from organizations.models import Organization
 
 
 class PaymentWebhookAPIView(APIView):
-    def post(self, request) -> Response:
+    def post(self, request: HttpRequest) -> Response:
         serializer = PaymentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 

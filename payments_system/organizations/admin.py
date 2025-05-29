@@ -8,4 +8,5 @@ class OrganizationAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'inn',
+        'balance',
     )
