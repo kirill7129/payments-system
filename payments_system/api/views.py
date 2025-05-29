@@ -26,7 +26,8 @@ class PaymentWebhookAPIView(APIView):
         with transaction.atomic():
             organization = Organization \
                 .objects \
-                .select_for_update().get(inn=data['payer_inn'])
+                .select_for_update() \
+                .get(inn=data['payer_inn'])
 
             payment = Payment.objects.create(
                 **data, 
