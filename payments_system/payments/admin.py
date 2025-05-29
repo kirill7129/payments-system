@@ -8,5 +8,8 @@ class PaymentAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'amount',
+        'payer_inn',
         'organization',
+        'document_number',
+        'document_date',
     )
