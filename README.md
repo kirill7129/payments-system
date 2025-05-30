@@ -18,7 +18,20 @@ docker compose -f docker-compose.yaml up -d
 - Применить миграции в контейнере с бекендом
 
 # Как запустить тесты
+- Дать права пользователю БД на работу с базой
+    - Зайти в контейнер с БД
+    - Выполнить команду для подключения
+    ```bash
+    mysql -h db -P 3306 -u <root_user_name> -p
+    ```
+    - Выдать все права 
+    ```bash
+    GRANT ALL PRIVILEGES ON *.* TO 'your_db_user_name'@'%' WITH GRANT OPTION;
+    FLUSH PRIVILEGES;
+    ```
+
 - В контейнере с бекендом зайти в корневую директорию проекта и запустить команду
+
 ```bash
 pytest
 ```
