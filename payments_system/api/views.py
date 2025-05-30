@@ -28,10 +28,19 @@ class PaymentWebhookAPIView(APIView):
             )
         
         with transaction.atomic():
-            organization = Organization \
-                .objects \
-                .select_for_update() \
-                .get(inn=data['payer_inn'])
+            try:
+                organization = Organization \
+                    .objects \
+                    .select_for_update() \
+                    .get(inn=data['payer_inn'])
+            except Organization.DoesNotExist:
+                return Response(
+                    {
+                        'detail': 'Организация с таким ИНН не найдена'
+                    },
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+            
 
             payment = Payment.objects.create(
                 **data, 
